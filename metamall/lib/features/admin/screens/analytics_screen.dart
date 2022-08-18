@@ -1,0 +1,81 @@
+import 'package:metamall/common/widgets/loader.dart';
+import 'package:metamall/constants/global_variables.dart';
+import 'package:metamall/features/admin/models/sales.dart';
+import 'package:metamall/features/admin/services/admin_services.dart';
+import 'package:metamall/features/admin/widgets/category_products_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+
+class AnalyticsScreen extends StatefulWidget {
+  const AnalyticsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AnalyticsScreen> createState() => _AnalyticsScreenState();
+}
+
+class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  final AdminServices adminServices = AdminServices();
+  int? totalSales;
+  List<Sales>? earnings;
+
+  @override
+  void initState() {
+    super.initState();
+    getEarnings();
+  }
+
+  getEarnings() async {
+    var earningData = await adminServices.getEarnings(context);
+    totalSales = earningData['totalEarnings'];
+    earnings = earningData['sales'];
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return earnings == null || totalSales == null
+        ? const Loader()
+        : SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShaderMask(
+                  blendMode: BlendMode.srcIn,
+                  shaderCallback: (bounds) =>
+                      GlobalVariables.primaryGradient.createShader(
+                    Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Admin Panel',
+                        style: TextStyle(
+                            fontSize: 34, fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
+                ),
+                Text(
+                  '\$$totalSales',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(
+                  height: 250,
+                  child: CategoryProductsChart(seriesList: [
+                    charts.Series(
+                      id: 'Sales',
+                      data: earnings!,
+                      domainFn: (Sales sales, _) => sales.label,
+                      measureFn: (Sales sales, _) => sales.earning,
+                    ),
+                  ]),
+                )
+              ],
+            ),
+          );
+  }
+}
