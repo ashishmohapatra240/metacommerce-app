@@ -21,8 +21,6 @@ dcl start
 ## Flutter
 The app has features like search, rating, add to cart, and checkout. Additionally, it has features like 3D and AR product viewing. Through the app, it offers a gateway for accessing the Metaverse. For the purpose of accessing discounts and offers, the app acts as a console for MetaCoins that have been acquired from the MetaVerse. The app is available for both mobiles and desktops.
 
-Place the .dartTool folder in the Wizer (Flutter) folder to run the code. You can run the .apk file available in this drive.
-
 
 ## Demo Video
 View the high quality demo video available in the [drive](https://drive.google.com/drive/folders/1tdmPJkQz-h0xqfZshSgLcOcQjrzE2UJG?usp=sharing)
